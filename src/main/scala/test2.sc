@@ -22,18 +22,18 @@ object MarsRover {
   }
 
 
-  sealed trait CoOrdinate extends Mars
-  final case class Position(x: Int, y: Int) extends CoOrdinate
-  final case class Front(x: Int, y: Int) extends CoOrdinate
+  sealed trait Map extends Mars
 
-  final case class Map(x: Int, y: Int) extends Mars {
-    def size: Map = Map(x, y)
+  final case class MapSize(xLength: Int, yLength: Int) extends Map {
+    def size: Map = MapSize(xLength, yLength)
   }
+  final case class Position(x: Int, y: Int) extends Map
+  final case class Front(x: Int, y: Int) extends Map
 
 }
+
 import MarsRover._
 
-val f = Map(7, 7)
-f.size
+
 val newRover = Rover(Position(2, 2), Front(3, 2))
 newRover.moveForward
