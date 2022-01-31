@@ -1,34 +1,26 @@
-
+import MarsRover._
 
 object MarsRover {
 
   trait Mars
 
-  final case class Rover(theMap: MapSize, position: Position, front: Front) extends Mars{
+  final case class Rover(theMap: MapSize, position: CoOrdinate, facing: Direction) extends Mars {
     def moveForward: Rover = {
-      val newFront: Front = (position, front) match {
-      case (p, f) if f.y == p.y + 1 && f.x == p.x => Front(f.x, f.y + 1)
-      case (p, f) if f.x == p.x - 1 && f.y == p.y => Front(f.x - 1, f.y)
-      case (p, f) if f.x == p.x + 1 && f.y == p.y => Front(f.x + 1, f.y)
-      case (p, f) if f.y == p.y - 1 && f.x == p.x => Front(f.x, f.y - 1)
-      case _ => front
+      val newPosition: CoOrdinate = facing.direction match {
+      case N => CoOrdinate(position.x, position.y - 1)
+      case E => CoOrdinate(position.x + 1, position.y)
+      case S => CoOrdinate(position.x, position.y + 1)
+      case W => CoOrdinate(position.x - 1, position.y)
+      case _ => position
     }
-      def isItTheEndOfTheMap(newPosition: Rover): Rover = (newPosition.position, newPosition.front)  match {
-        case (position, front) if position.x > theMap.xLength + 1 => Rover(theMap, Position(1, position.y), Front(2, front.y))
-        case (position, front) if front.y > theMap.yLength + 1    => Rover(theMap, Position(1, position.x), Front(2, front.x))
-        case (position, front) if front.x < 1                     => Rover(theMap, Position(theMap.xLength, position.y), Front(theMap.xLength - 1, position.y))
-        case (position, front) if front.y < 1                     => Rover(theMap, Position(theMap.yLength, position.x), Front(theMap.yLength - 1, position.x))
-        case  _                                                   => newPosition
+      def isItTheEndOfTheMap(newPosition: CoOrdinate): Rover = newPosition match {
+        case newP if newP.x > theMap.xLength => Rover(theMap, CoOrdinate(1, position.y), facing)
+        case newP if newP.x < 0 => Rover(theMap, CoOrdinate(theMap.xLength, position.y), facing)
+        case newP if newP.y > theMap.yLength => Rover(theMap, CoOrdinate(position.x, 1), facing)
+        case newP if newP.y < 0 => Rover(theMap, CoOrdinate(position.x, theMap.yLength), facing)
       }
-          
 
-      // Stops the Rover from moving if the front is an impossible(diagonal) coOrdinate
-      val newRoverPostion: Rover = if (newFront == front)
-        Rover(theMap, position, front)
-      else
-        Rover(theMap, Position(front.x, front.y), newFront)
-
-      isItTheEndOfTheMap(newRoverPostion)
+      isItTheEndOfTheMap(newPosition)
     }
   }
 
@@ -38,13 +30,20 @@ object MarsRover {
   final case class MapSize(xLength: Int, yLength: Int) extends Map {
     def size: Map = MapSize(xLength, yLength)
   }
-  final case class Position(x: Int, y: Int) extends Map
-  final case class Front(x: Int, y: Int) extends Map
+  final case class CoOrdinate(x: Int, y: Int) extends Map
+
+  trait CompassPoint extends Mars
+  final case class Direction(direction: CompassPoint = E) extends Map
+
+  final case object N extends CompassPoint
+  final case object E extends CompassPoint
+  final case object S extends CompassPoint
+  final case object W extends CompassPoint
 
 }
 
 import MarsRover._
 
 
-val newRover = Rover(MapSize(7, 7), Position(1, 1), Front(0, 1))
+val newRover = Rover(MapSize(7, 7), CoOrdinate(1, 1), Direction())
 newRover.moveForward
