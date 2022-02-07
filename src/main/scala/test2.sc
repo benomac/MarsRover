@@ -61,3 +61,11 @@ println(9)
 newRover
 newRover.moveForward.turnLeft.moveForward
 newRover.moveForward
+
+val movesForward = b.x - a.x
+val movesDown = b.y - a.y
+val floor = movesForward + movesDown
+
+if (a.y == b.y) (b.x - a.x).toString
+else
+  if (a.x != b.x) (b.y - a.y).toString

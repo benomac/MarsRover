@@ -2,19 +2,16 @@ package Mars.Rover.Tech.Challenge
 
 import Mars.Rover.Tech.Challenge.MarsRover.Rover._
 import Mars.Rover.Tech.Challenge.MarsRover._
+import Mars.Rover.Tech.Challenge.Utils.getAllMoves
 
 
-object Main extends App {
-//  val xAxisLength = scala.io.StdIn.readLine("please enter an x-axis length:- ")
-//  val yAxisLength = scala.io.StdIn.readLine("please enter an y-axis length:- ")
-//
-//  val newMap: MapSize = MapSize(xAxisLength.toInt, yAxisLength.toInt)
-//  val newRover = Rover(newMap)
-//  println(newRover.currentLocationInfo(newMap))
-//  doYouWantToMove(newRover, newMap)
-//  val xAxisLength = scala.io.StdIn.readLine("please enter an x-axis length:- ")
-//  val yAxisLength = scala.io.StdIn.readLine("please enter an y-axis length:- ")
-  val newRover = Rover(MapSize(10, 10))
+ object Main extends App {
+  val newRover = Rover(MapSize(10, 10), Coordinate(9, 6), East)
 
-  println(newRover.getFromAToB(newRover.position, CoOrdinate(5, 6)))
+
+  println(getAllMoves(newRover, Coordinate(4, 4)))
+  println(newRover.calculateXMoves(newRover, Coordinate(4, 4)))
+  println(newRover.calculateYMoves(newRover, Coordinate(4, 4)))
+
+
 }
