@@ -1,18 +1,35 @@
 package Mars.Rover.Tech.Challenge
 
+import scala.annotation.tailrec
+
 sealed trait Map
 
 final case class MapSize(xLength: Int, yLength: Int) extends Map {
+
   def size: String = s"(X: $xLength, Y: $yLength)"
+
+  def createListOfCoordinates: List[List[Coordinate]] = {
+    val coordinateList: Seq[Coordinate] = for {
+      i: Int <- Range(1, this.xLength + 1)
+      j: Int <- Range(1, this.yLength + 1)
+    } yield Coordinate(i, j)
+    createGrid(coordinateList.toList)
+  }
+
+  @tailrec
+  private def createGrid(coList: List[Coordinate], acc: List[List[Coordinate]] = Nil): List[List[Coordinate]] = {
+    if (coList == Nil) acc
+    else {
+      val l = coList.filter(co => co.y == coList.head.y)
+      createGrid(coList.filterNot(co => co.y == coList.head.y), acc :+ l)
+    }
+  }
+
 }
 
 final case class Coordinate(x: Int, y: Int) extends Map {
   def location: String = s"($x, $y)"
-
-
 }
-
-
 
 trait Wrap extends Map
 case object Wrapped extends Wrap

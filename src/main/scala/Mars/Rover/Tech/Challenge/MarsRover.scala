@@ -39,44 +39,20 @@ object MarsRover {
       case West => Rover(theMap, position, South)
     }
 
-//    private def getNumberOfMovesOnOneAxis(axisB: Int, axisA: Int, mapSide: Int): Int = {
-//      val AToB = Math.abs(axisB - axisA)
-//      val lengthLessAToB = mapSide - AToB //for the wrap around
-//      if (AToB > lengthLessAToB) lengthLessAToB else AToB
-//    }
-
-    private def wrapStatus(axisB: Int, axisA: Int, mapSide: Int): Wrap = {
+    def wrapStatus(axisB: Int, axisA: Int, mapSide: Int): Wrap = {
       val AToB = Math.abs(axisB - axisA)
       val lengthLessAToB = mapSide - AToB
       if (AToB > lengthLessAToB) Wrapped else NonWrapped
     }
 
-//    def finishXAxisHeading(finishX: Int, xAxisWrapStatus: Wrap): CompassPoint = (position.x, finishX, xAxisWrapStatus) match {
-//      case (_, _, Wrapped)  => if (position.x < finishX) West else East
-//      case (_, _, NonWrapped) => if (position.x < finishX) East else West
-//    }
-//
-//    def finishYAxisHeading(finishY: Int, yAxisWrapStatus: Wrap): CompassPoint = (position.y, finishY, yAxisWrapStatus) match {
-//      case (_, _, Wrapped)  => if (position.y < finishY) West else East
-//      case (_, _, NonWrapped) => if (position.x < finishY) East else West
-//    }
-
     def finishHeading(xOrYPosition: Int, finish: Int, WrapStatus: Wrap, compassPoint1: CompassPoint, compassPoint2: CompassPoint): CompassPoint = (position.x, finish, WrapStatus) match {
-      case (_, _, Wrapped)  => if (xOrYPosition < finish) compassPoint1 else compassPoint2
-      case (_, _, NonWrapped) => if (xOrYPosition < finish) compassPoint2 else compassPoint1 //make start and finish types?
+      case (_, _, Wrapped)  => if (xOrYPosition > finish) compassPoint1 else compassPoint2
+      case (_, _, NonWrapped) => if (xOrYPosition < finish) compassPoint1 else compassPoint2 //make start and finish types?
     }
-
-//    val finishYAxisHeading   = (position.y, finish.y, WrapStatus) match {
-//      case (_, _, Wrapped) => if (position.y < finish.y) North else South
-//      case (_, _, NonWrapped) => if (position.y < finish.y) South else North
-
-//    def axisNumberOfMoves(finishX: Int, finishHeading: CompassPoint, fin: Coordinate, m: List[String]): List[String] = this match {
-//      case start if start.position.x != finishX && finishHeading != start.heading => calculateXMoves(start.turnClockWise, fin, m :+ "turn ")
-//    }
 
     def calculateXMoves(finish: Coordinate, moves: List[String] = Nil): List[String] = {
       val xAxisWrapStatus     = wrapStatus(position.x, finish.x, theMap.xLength)
-      val finishXAxisHead      = finishHeading(position.x, finish.x, xAxisWrapStatus, West, East)
+      val finishXAxisHead      = finishHeading(position.x, finish.x, xAxisWrapStatus, East, West)
 
       val xAxisMovesList =
         if (this.position.x != finish.x) {
@@ -90,35 +66,37 @@ object MarsRover {
       xAxisMovesList
     }
 
-    def calculateXMoveHeadingAfterMoves(finish: Coordinate, newHeading: CompassPoint = this.heading): CompassPoint = {
+    def calculateHeadingAfterXmoves(finish: Coordinate, newHeading: CompassPoint = this.heading): CompassPoint = {
       val xAxisWrapStatus     = wrapStatus(position.x, finish.x, theMap.xLength)
-      val finishXAxisHead      = finishHeading(position.x, finish.x, xAxisWrapStatus, West, East)
+      val finishXAxisHead      = finishHeading(position.x, finish.x, xAxisWrapStatus, East, West)
       val Heading =
         if (finishXAxisHead != newHeading)
-          calculateXMoveHeadingAfterMoves(finish, newHeading.turnClockWise)
+          calculateHeadingAfterXmoves(finish, newHeading.turnClockWise)
         else newHeading
       Heading
     }
 
-    def calculateYMoves(finish: Coordinate, moves: List[String] = Nil): List[String] = {
+    def calculateYMoves(finish: Coordinate, moves: List[String] = Nil, newH: CompassPoint): List[String] = {
       val yAxisWrapStatus     = wrapStatus(position.y, finish.y, theMap.yLength)
-      val finishYAxisHead      = finishHeading(position.y, finish.y, yAxisWrapStatus, North, South)
-
+      val finishYAxisHead      = finishHeading(position.y, finish.y, yAxisWrapStatus, South, North)
+      val newRover = Rover(theMap, position, newH)
       val yAxisMovesList =
-        if (this.position.y != finish.y) {
-          if (finishYAxisHead != this.heading) {
-            println("y heading " + this.heading)
-            this.turnClockWise.calculateYMoves(finish, moves :+ "turn ")
+        if (newRover.position.y != finish.y) {
+          if (finishYAxisHead != newRover.heading) {
+            println("x heading " + newRover.heading)
+            calculateYMoves(finish, moves :+ "turn ", newH.turnClockWise)
           }
           else
-            this.moveForward.calculateYMoves(finish, moves :+ "move forward ")
+            newRover.moveForward.calculateYMoves(finish, moves :+ "move forward ", newH)
         } else moves
       yAxisMovesList
+
     }
 
     def calculateAllMoves(finish: Coordinate): List[String] = {
       val xMoves = calculateXMoves(finish)
-      val yMoves = calculateYMoves(finish)
+      val newH = calculateHeadingAfterXmoves(finish, heading)
+      val yMoves = calculateYMoves(finish, newH = newH)
       List.concat(xMoves, yMoves)
     }
 
