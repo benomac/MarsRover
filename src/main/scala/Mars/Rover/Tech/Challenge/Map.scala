@@ -20,8 +20,8 @@ final case class MapSize(xLength: Int, yLength: Int) extends Map {
   private def createGrid(coList: List[Coordinate], acc: List[List[Coordinate]] = Nil): List[List[Coordinate]] = {
     if (coList == Nil) acc
     else {
-      val l = coList.filter(co => co.y == coList.head.y)
-      createGrid(coList.filterNot(co => co.y == coList.head.y), acc :+ l)
+      val row = coList.filter(co => co.y == coList.head.y)
+      createGrid(coList.filterNot(co => co.y == coList.head.y), acc :+ row)
     }
   }
 
