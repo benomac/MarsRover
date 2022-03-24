@@ -5,7 +5,7 @@ import org.scalatest.FunSuite
 
 class MarsRoverTechChallengeSpec extends FunSuite {
 
-  val testMap: MapSize = MapSize(10, 10)
+  val testMap: TheMapSize = TheMapSize(10, 10)
   def testRoverCreater(x: Int, y: Int, head: CompassPoint): Rover = {
     Rover(testMap, Coordinate(x, y), head)
   }

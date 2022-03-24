@@ -1,6 +1,6 @@
-import Mars.Rover.Tech.Challenge.{Coordinate, MapSize}
+import Mars.Rover.Tech.Challenge.{Coordinate, TheMapSize}
 
-val newMap = MapSize(5, 5)
+val newMap = TheMapSize(5, 5)
 
 val start = Coordinate(1, 1)
 

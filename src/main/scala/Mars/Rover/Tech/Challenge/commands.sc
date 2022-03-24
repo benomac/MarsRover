@@ -8,7 +8,7 @@ object Commands {
 
   def manualOrAuto = ???
 
-  def moveForwardOrTurn(newRover: Rover, newMap: MapSize): Unit = {
+  def moveForwardOrTurn(newRover: Rover, newMap: TheMapSize): Unit = {
     val forwardOrTurn = scala.io.StdIn.readLine("Do you want to move forwards or turn, F/T? ")
 
     if (forwardOrTurn.toLowerCase() == "f") {
@@ -23,7 +23,7 @@ object Commands {
       }
   }
 
-  def doYouWantToMove(newRover: Rover, newMap: MapSize): Unit = {
+  def doYouWantToMove(newRover: Rover, newMap: TheMapSize): Unit = {
     val yesOrNo = scala.io.StdIn.readLine("Do you want to move, Y/N? ")
     if (yesOrNo.toLowerCase() == "y" || yesOrNo.toLowerCase() == "yes")
       moveForwardOrTurn(newRover, newMap)

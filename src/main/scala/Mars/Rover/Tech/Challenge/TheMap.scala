@@ -2,9 +2,9 @@ package Mars.Rover.Tech.Challenge
 
 import scala.annotation.tailrec
 
-sealed trait Map
+sealed trait TheMap
 
-final case class MapSize(xLength: Int, yLength: Int) extends Map {
+final case class TheMapSize(xLength: Int, yLength: Int) extends TheMap {
 
   def size: String = s"(X: $xLength, Y: $yLength)"
 
@@ -27,15 +27,15 @@ final case class MapSize(xLength: Int, yLength: Int) extends Map {
 
 }
 
-final case class Coordinate(x: Int, y: Int) extends Map {
+final case class Coordinate(x: Int, y: Int) extends TheMap {
   def location: String = s"($x, $y)"
 }
 
-trait Wrap extends Map
+trait Wrap extends TheMap
 case object Wrapped extends Wrap
 case object NonWrapped extends Wrap
 
-trait CompassPoint extends Map {
+trait CompassPoint extends TheMap {
   def turnClockWise: CompassPoint = this match {
     case North => East
     case East => South

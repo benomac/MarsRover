@@ -3,7 +3,7 @@ package Mars.Rover.Tech.Challenge
 
 object MarsRover {
 
-  final case class Rover(theMap: MapSize, position: Coordinate, heading: CompassPoint) {
+  final case class Rover(theMap: TheMapSize, position: Coordinate, heading: CompassPoint) {
     def location: String = s"${position.location}"
     def direction: String = s"${heading}"
 
@@ -102,8 +102,8 @@ object MarsRover {
 
 
 
-    def currentLocationInfo(newMap: MapSize): String =
-      s"Map size: ${newMap.size} Rover's location: $location, Facing: $direction"
+    def currentLocationInfo(newMap: TheMapSize): String =
+      s"TheMap size: ${newMap.size} Rover's location: $location, Facing: $direction"
   }
 
 }
